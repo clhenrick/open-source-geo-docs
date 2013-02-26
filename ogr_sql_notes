@@ -4,17 +4,71 @@ resources:
   http://www.gdal.org/ogr/ogr_sql.html
   https://github.com/nvkelso/geo-how-to/wiki/OGR-to-reproject,-modify-Shapefiles
 
-*note: use ogrinfo to get stats, use ogr2ogr to create a new shapefile.
+*note: use ogrinfo to get stats and ogr2ogr to create a new shapefile.
 
-
-#this one pulls all admin 0 capitals and puts it into a new shapefile called 'ne_50m_pop_place_admin0_cap.shp':
+#this command queries all admin 0 capitals (country capitals) and creates a new shapefile called 'ne_50m_pop_place_admin0_cap.shp':
   ogr2ogr -sql "SELECT * FROM ne_50m_populated_places_simple WHERE featurecla='Admin-0 capital'"  ne_50m_pop_place_admin0_cap.shp ne_50m_populated_places_simple.shp
 
-#same as above but returns a new shapefile only of admin 1 capitals 
+#similar as above but returns a new shapefile only of admin 1 capitals 
   ogr2ogr -sql "SELECT * FROM ne_50m_populated_places_simple WHERE featurecla IN ('Admin-1 capital', 'Admin-1 region capital')"  ne_50m_pop_place_admin1_cap.shp ne_50m_populated_places_simple.shp
 
-#this query returns each value in the featurecla field with no duplicates:
+#this query returns each value in the featurecla field with no duplicates and does not create a new shapefile:
   ogrinfo -sql "select DISTINCT featurecla from ne_50m_populated_places_simple"  ne_50m_populated_places_simple.shp ne_50m_populated_places_simple
   
 #this query returns the number of values in ADMO_A3 without duplicate values:
   ogrinfo -sql "select COUNT(DISTINCT ADM0_A3) from ne_50m_populated_places_simple"  ne_50m_populated_places_simple.shp ne_50m_populated_places_simple
+  
+==============================================================
+Working with OSM shapefile extract data
+
+#return the attributes in the type field and orders them alphabetically:
+ogrinfo -sql "select distinct type from roads order by type" roads.shp roads
+
+The following if for separating roads into various classes for the Moon regional road styles:
+  To Do: create a shell script that runs these commands. 
+  
+#select all freeways from a osm roads.shp and create a new .shp file:
+ogr2ogr -sql "select * from roads where type in ('motorway', 'trunk')"  superhwy_osm.shp roads.shp
+    
+#same as above and project to EPSG:2274 (Tennessee State Plane, feet):
+ogr2ogr -sql "select * from roads where type in ('motorway', 'trunk')" -t_srs EPSG:2274 superhwy_osm_2274.shp roads.shp
+
+#select freeway ramps / links:
+ogr2ogr -sql "select * from roads where type in ('motorway_link', 'trunk_link')"  superhwy_links_osm.shp roads.shp
+ogr2ogr -sql "select * from roads where type in ('motorway_link', 'trunk_link')"  -t_srs EPSG:2274 superhwy_links_osm_2274.shp roads.shp
+
+#select all main roads... :
+ogr2ogr -sql "select * from roads where type in ('primary','secondary','tertiary')"  main-rd_osm.shp roads.shp
+ogr2ogr -sql "select * from roads where type in ('primary','secondary','tertiary')" -t_srs EPSG:2274 main-rd_osm_2274.shp roads.shp
+
+#select all links (to keep if needed at larger scales):
+ogr2ogr -sql "select * from roads where type in ('primary_link','secondary_link','tertiary_link')"  main-rd_links_osm.shp roads.shp 
+ogr2ogr -sql "select * from roads where type in ('primary_link','secondary_link','tertiary_link')" -t_srs EPSG:2274 main-rd_links_osm_2274.shp roads.shp
+
+  #or use the like operator:
+   ogr2ogr -sql "select * from roads where type like '%link' and type != 'motorway_link'" main-rd_links_osm.shp roads.shp 
+
+#select all local roads:
+ogr2ogr -sql "select * from roads where type in ('residential', 'service', 'unclassified')"  other-rd_osm.shp roads.shp 
+ogr2ogr -sql "select * from roads where type in ('residential', 'service', 'unclassified')" -t_srs EPSG:2274 other-rd_osm_2274.shp roads.shp 
+
+#select all dirt roads:
+ogr2ogr -sql "select * from roads where type = 'track'"  dirt-rd_osm.shp roads.shp
+ogr2ogr -sql "select * from roads where type = 'track'" -t_srs EPSG:2274 dirt-rd_osm_2274.shp roads.shp 
+
+#select all pedestrian roads / paths / cycleways / etc:
+ogr2ogr -sql "select * from roads where type in ('bridleway', 'cycleway', 'footway', 'living_street', 'path', 'pedestrian', 'steps')"  ped-trail_osm.shp roads.shp 
+ogr2ogr -sql "select * from roads where type in ('bridleway', 'cycleway', 'footway', 'living_street', 'path', 'pedestrian', 'steps')" -t_srs EPSG:2274 ped-trail_osm_2274.shp roads.shp 
+
+*************************************
+OSM natural features
+
+#list type attributes:
+ogrinfo -sql "select distinct type from natural order by type" natural.shp natural
+
+#create a water polygon layer from natural.shp:
+ogr2ogr -sql "select * from natural where type in ('riverbank', 'water')" -t_srs EPSG:2274 water-poly_osm_2274.shp natural.shp 
+
+#create a parks polygon layer from natural.shp:
+ogr2ogr -sql "select * from natural where type = 'park'" -t_srs EPSG:2274 parks_osm_2274.shp natural.shp 
+

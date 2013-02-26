@@ -1,0 +1,59 @@
+these are notes on testing different parameters of the Skeletron python script developed by Mike Migurski at Stamen.
+
+standard input to run the script in bash looks like this:
+   
+   for route-rels script;
+      python skeletron-osm-route-rels.py /Users/chrishenrick/Projects/Beijing/DATA/skeletron_test/osm.xml/beijing.osm /Users/chrishenrick/Projects/Beijing/DATA/skeletron_test/json/beijing-routes_z15_w20.json 
+      
+   
+   for streets script:
+      python skeletron-osm-streets.py ~/Projects/Beijing/DATA/skeletron_test/osm.xml/beijing.osm /Users/chrishenrick/Projects/Beijing/DATA/skeletron_test/json/beijing-streets_z15.json 
+
+
+   *note: don't set the paramater to ignore highway class / type as it ditches the road classification tag / field.
+      the road lines can be joined later in AI using name and highway fields.
+      
+   *to set the width and zoom parameters use -z and -w after python skeletron-osm-etc.py 
+
+   
+For the exact scales associated with zoom levels (-z) see: http://kelsocartography.com/blog/?p=2407
+   -z 19 is the most zoomed in (~1:1,000) while -z 14 is ~1:36,000 and -z 4 is ~1:37,000,000
+
+the width parameter appears to contribute to generalization, eg: a width of 15 will be more generalized than the default value of 10.
+
+  
+
+*****************tests**************************
+
+a zoom level of 1 caused an error in the script: 
+
+Traceback (most recent call last):
+  File "skeletron-osm-streets.py", line 79, in <module>
+    geojson = multilines_geojson(multilines, key_properties, **kwargs)
+  File "/Users/chrishenrick/carto_tools/temp/Skeletron/Skeletron/output.py", line 19, in multilines_geojson
+    centerline = multiline_centerline(multiline, buffer, density, min_length, min_area)
+  File "/Users/chrishenrick/carto_tools/temp/Skeletron/Skeletron/__init__.py", line 125, in multiline_centerline
+    routes = skeleton_routes(skeleton, min_length)
+  File "/Users/chrishenrick/carto_tools/temp/Skeletron/Skeletron/__init__.py", line 333, in skeleton_routes
+    routes = graph_routes(skeleton, True)
+  File "/Users/chrishenrick/carto_tools/temp/Skeletron/Skeletron/__init__.py", line 211, in graph_routes
+    for (v, w) in combinations(leaves, 2)]
+  File "/Library/Python/2.7/site-packages/Shapely-1.2.16-py2.7.egg/shapely/geometry/base.py", line 226, in distance
+    return self.impl['distance'](self, other)
+  File "/Library/Python/2.7/site-packages/Shapely-1.2.16-py2.7.egg/shapely/topology.py", line 27, in __call__
+    self._validate(other, stop_prepared=True)
+  File "/Library/Python/2.7/site-packages/Shapely-1.2.16-py2.7.egg/shapely/topology.py", line 18, in _validate
+    raise ValueError("Prepared geometries cannot be operated on")
+ValueError: Prepared geometries cannot be operated on
+
+   *but this was for a metro extract size of data, probably to be expected.
+   
+************************************************
+   
+-the streets script seems to have better results than the routes-rels script, but returns all types of streets. 
+   the geojson data can be queried in QGIS to only display types of roads desired for simplification 
+   (ie: motorways, primary, etc.)
+   
+-For Avalon maps setting the zoom level to around 15 or 13 seems to generate good results (z15 is ~1:18,000 and z13 is ~1:72,000)
+
+-increasing the width parameter > than the default value of 10 for smaler scale zoom levels seems like a good idea?

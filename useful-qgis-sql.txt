@@ -1,0 +1,15 @@
+useful QGIS SQL queries
+
+OSM
+==================
+the following will query both ped, cycle, and dirt roads on a OSM road shapefile layer:
+"type" IN ('path','pedestrian','footway','cycleway','steps','living_street','bridleway','track')
+
+other queries used in QGIS in the where clause:
+  "type" IN ('nature_reserve','park')  AND "name" != NULL  AND "area" > 200000
+
+
+GNS names
+==================
+to query out populated places with a name matching 'Kh*' in the field for full name with no diacratics in reading order (first name, last name)
+FC = 'P' AND FULL_NAME_ND_RO LIKE 'Kh%'

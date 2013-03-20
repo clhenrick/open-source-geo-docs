@@ -1,0 +1,7 @@
+How to do that in QGIS 1.8
+
+# editing a column for labeling contours!
+    # open an attribute table, toggle editing (click pen symbol), open field calculator
+    # calculate values into a new field (called mine 'Label')
+    tostring( "FEET" ) # function converts another field's value to a string
+    regexp_replace( "Label", '^*$', '\'') # function finds and replaces a field's value using regex

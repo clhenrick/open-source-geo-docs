@@ -24,7 +24,7 @@ Working with OSM shapefile extract data
 #return the attributes in the type field and orders them alphabetically:
 ogrinfo -sql "select distinct type from roads order by type" roads.shp roads
 
-The following if for separating roads into various classes for the Moon regional road styles:
+The following commands are for separating roads into various classes for the Moon HB regional road styles:
   To Do: create a shell script that runs these commands. 
   
 #select all freeways from a osm roads.shp and create a new .shp file:
@@ -60,6 +60,12 @@ ogr2ogr -sql "select * from roads where type = 'track'" -t_srs EPSG:2274 dirt-rd
 ogr2ogr -sql "select * from roads where type in ('bridleway', 'cycleway', 'footway', 'living_street', 'path', 'pedestrian', 'steps')"  ped-trail_osm.shp roads.shp 
 ogr2ogr -sql "select * from roads where type in ('bridleway', 'cycleway', 'footway', 'living_street', 'path', 'pedestrian', 'steps')" -t_srs EPSG:2274 ped-trail_osm_2274.shp roads.shp 
 
+
+#querying geojson data after skeletroning:
+ogr2ogr -sql "select * from OGRGeoJSON where highway in ('motorway', 'trunk')" -f "ESRI Shapefile" -t_srs EPSG:2274 superhwy_osm_gen_z14_w13_2274.shp nashville_z14_w13.json
+ogr2ogr -sql "select * from OGRGeoJSON where highway in ('primary','secondary')" -f "ESRI Shapefile" -t_srs EPSG:2274 main-rd_osm_gen_z14_w13_2274.shp nashville_z14_w13.json
+
+
 *************************************
 OSM natural features
 
@@ -72,3 +78,9 @@ ogr2ogr -sql "select * from natural where type in ('riverbank', 'water')" -t_srs
 #create a parks polygon layer from natural.shp:
 ogr2ogr -sql "select * from natural where type = 'park'" -t_srs EPSG:2274 parks_osm_2274.shp natural.shp 
 
+======================================
+Flickr shapes
+  *to do: how to query out a substring and create a new field from it?
+
+#query out all neighborhoods in Nashville, TN, US
+ogr2ogr -sql "select label as name from OGRGeoJSON where (label LIKE '%Nashville, TN, US%')" -f "ESRI Shapefile" -t_srs EPSG:2274 hoods_flickr_nv_test_2274.shp flickr_shapes_neighbourhoods.geojson 

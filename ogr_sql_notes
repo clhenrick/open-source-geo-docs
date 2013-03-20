@@ -24,7 +24,6 @@ Working with OSM shapefile extract data
 #return the attributes in the type field and order them alphabetically:
 ogrinfo -sql "select distinct type from roads order by type" roads.shp roads
 
-<<<<<<< HEAD
 The following commands are for separating roads into various classes for the Moon HB regional road styles:
   To Do: create a shell script that runs these commands. 
 =======
@@ -36,7 +35,6 @@ The following commands are for separating roads into various classes for the Moo
          ie: ogr2ogr -sql "select * from roads group by ('name', 'type', 'ref')" roads_grouped.shp roads.shp 
          but ogr sql does not support the 'group by' SQL aggregation command.
          apparently this is possible in postgresql with postGIS, then one could export the table result to a .shp format.
->>>>>>> 4910e43923d1a98598e4efacb44a1180c556a22e
   
 #select all freeways from a osm roads.shp and create a new .shp file:
 ogr2ogr -sql "select * from roads where type in ('motorway', 'trunk')"  superhwy_osm.shp roads.shp

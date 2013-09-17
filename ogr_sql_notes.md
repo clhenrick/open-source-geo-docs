@@ -31,13 +31,15 @@ Working with OSM shapefile extract data
 ogrinfo -sql "select distinct type from roads order by type" roads.shp roads
 
 The following commands are for separating roads into various classes for the Moon HB regional road styles:
-  To Do: create a shell script that runs these commands. 
+* To Do: create a shell script that runs these commands. 
+
 =======
-#I wrote the following commands for separating an OSM extract roads.shp containing every type of OSM road style into different classes for the ATP Moon HB regional road style:
+#The following commands separate an OSM extract roads.shp containing every type of OSM road tag into different classes to make styling roads easier in Mapublisher:
+-----------
 
-  To Do: create a bash shell script that runs all of these commands.
+* To Do: create a bash shell script that runs all of these commands.
 
-  *note: being able to perform the 'group by' function in ogr sql would be helpful for joining road geometry based on field names,
+* note: being able to perform the 'group by' function in ogr sql would be helpful for joining road geometry based on field names,
          ie: ogr2ogr -sql "select * from roads group by ('name', 'type', 'ref')" roads_grouped.shp roads.shp 
          but ogr sql does not support the 'group by' SQL aggregation command.
          apparently this is possible in postgresql with postGIS, then one could export the table result to a .shp format.

@@ -1,8 +1,10 @@
 OGR SQL queries
+===============
 
 resources:
   http://www.gdal.org/ogr/ogr_sql.html
   https://github.com/nvkelso/geo-how-to/wiki/OGR-to-reproject,-modify-Shapefiles
+  http://www.compsci.wm.edu/SciClone/documentation/software/geo/gdal-1.9.0/html/ogr/ogr_sql.html
 
 *note: use ogrinfo to get stats and ogr2ogr to create a new shapefile.
 
@@ -23,6 +25,7 @@ ogrinfo -sql "SELECT DISTINCT field_name FROM polylayer" polylayer.shp
   
 ==============================================================
 Working with OSM shapefile extract data
+---------
 
 #return the attributes in the type field and order them alphabetically:
 ogrinfo -sql "select distinct type from roads order by type" roads.shp roads

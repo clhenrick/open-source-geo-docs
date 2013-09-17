@@ -6,6 +6,9 @@ resources:
 
 *note: use ogrinfo to get stats and ogr2ogr to create a new shapefile.
 
+#return all values for a field
+ogrinfo -sql "SELECT DISTINCT field_name FROM polylayer" polylayer.shp
+
 #this command queries all admin 0 capitals (country capitals) and creates a new shapefile called 'ne_50m_pop_place_admin0_cap.shp':
   ogr2ogr -sql "SELECT * FROM ne_50m_populated_places_simple WHERE featurecla='Admin-0 capital'"  ne_50m_pop_place_admin0_cap.shp ne_50m_populated_places_simple.shp
 

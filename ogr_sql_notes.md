@@ -1,33 +1,33 @@
 OGR SQL queries
 ===============
 
-resources:
-  http://www.gdal.org/ogr/ogr_sql.html
-  https://github.com/nvkelso/geo-how-to/wiki/OGR-to-reproject,-modify-Shapefiles
-  http://www.compsci.wm.edu/SciClone/documentation/software/geo/gdal-1.9.0/html/ogr/ogr_sql.html
+###resources:
+*  http://www.gdal.org/ogr/ogr_sql.html
+*  https://github.com/nvkelso/geo-how-to/wiki/OGR-to-reproject,-modify-Shapefiles
+*  http://www.compsci.wm.edu/SciClone/documentation/software/geo/gdal-1.9.0/html/ogr/ogr_sql.html
 
 *note: use ogrinfo to get stats and ogr2ogr to create a new shapefile.
 
-#return all values for a field
+###return all values for a field
 ogrinfo -sql "SELECT DISTINCT field_name FROM polylayer" polylayer.shp
 
-#this command queries all admin 0 capitals (country capitals) and creates a new shapefile called 'ne_50m_pop_place_admin0_cap.shp':
+###this command queries all admin 0 capitals (country capitals) and creates a new shapefile called 'ne_50m_pop_place_admin0_cap.shp':
   ogr2ogr -sql "SELECT * FROM ne_50m_populated_places_simple WHERE featurecla='Admin-0 capital'"  ne_50m_pop_place_admin0_cap.shp ne_50m_populated_places_simple.shp
 
-#similar as above but returns a new shapefile only of admin 1 capitals 
+###similar as above but returns a new shapefile only of admin 1 capitals 
   ogr2ogr -sql "SELECT * FROM ne_50m_populated_places_simple WHERE featurecla IN ('Admin-1 capital', 'Admin-1 region capital')"  ne_50m_pop_place_admin1_cap.shp ne_50m_populated_places_simple.shp
 
-#this query returns each value in the featurecla field with no duplicates and does not create a new shapefile:
+###this query returns each value in the featurecla field with no duplicates and does not create a new shapefile:
   ogrinfo -sql "select DISTINCT featurecla from ne_50m_populated_places_simple"  ne_50m_populated_places_simple.shp ne_50m_populated_places_simple
   
-#this query returns the number of values in ADMO_A3 without duplicate values:
+###this query returns the number of values in ADMO_A3 without duplicate values:
   ogrinfo -sql "select COUNT(DISTINCT ADM0_A3) from ne_50m_populated_places_simple"  ne_50m_populated_places_simple.shp ne_50m_populated_places_simple
   
 ==============================================================
 Working with OSM shapefile extract data
 ---------
 
-#return the attributes in the type field and order them alphabetically:
+###return the attributes in the type field and order them alphabetically:
 ogrinfo -sql "select distinct type from roads order by type" roads.shp roads
 
 The following commands are for separating roads into various classes for the Moon HB regional road styles:

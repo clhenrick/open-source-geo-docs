@@ -82,8 +82,7 @@ ogr2ogr -sql "select * from OGRGeoJSON where highway in ('primary','secondary')"
 
 
 *************************************
-OSM natural features
-==============
+##OSM natural features
 
 ###list type attributes:
 ogrinfo -sql "select distinct type from natural order by type" natural.shp natural

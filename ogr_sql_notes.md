@@ -31,8 +31,7 @@ Working with OSM shapefile extract data
 ogrinfo -sql "select distinct type from roads order by type" roads.shp roads
 
 
-The following commands separate an OSM extract roads.shp containing every type of OSM road tag into different classes to make styling roads easier in Mapublisher:
------------
+##The following commands separate an OSM extract roads.shp file containing every type of OSM road tag into different classes to make styling roads easier in Mapublisher:
 
 * To Do: create a bash shell script that runs all of these commands.
 

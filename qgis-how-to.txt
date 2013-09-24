@@ -1,7 +1,47 @@
 How to do that in QGIS 1.8
 
+Field Calculator!
+============================================
+# using regex_replace() to edit an attribute column in flickr place data:
+    regexp_replace( "Label", ',.*$', '')
+    turns the string "Steinway, New York, NY, US, United States" > "Steinway" 
+    first parameter is the original column, second parameter says grab everything from a comma to the end of the line, third parameter says replace with nothing.  
+
 # editing a column for labeling contours!
     # open an attribute table, toggle editing (click pen symbol), open field calculator
     # calculate values into a new field (called mine 'Label')
     tostring( "FEET" ) # function converts another field's value to a string
     regexp_replace( "Label", '^*$', '\'') # function finds and replaces a field's value using regex
+    
+    #can be combined as follows:
+    regexp_replace(tostring( "FEET" ),'^*$','\'')
+    
+    #set n like this?
+    n = "test_label"
+    
+    def digitgroup(n, sep = ','):
+    if n == "": n = 0
+    s = str(n)[::-1]
+    groups = []
+    i = 0
+    while i < len(s):
+        groups.append(s[i:i+3])
+        i += 3
+    return sep.join(groups)[::-1]
+
+# joining OSM roads based on 'name', 'ref', 'type'
+    *note: this can take a long time if working with a large dataset.
+      I suggest trimming the size of the data prior to this workflow.
+      the geometry command in particular appears to not work.
+ 
+  1. clean up fields and remove null values
+  2. concatenate the 3 fields into a new field called 'join'
+  3. perform a geoprocess in vector > geometry > single-parts to multi-part and select the 'join' field
+    
+# getting rid of null values in a column that is a string format
+   case when "name" is NULL then 'no value' else "name" end
+   case when "ref" is NULL then 'no value' else "ref" end
+   case when "type" is NULL then 'no value' else "type" end
+
+# adding a comma between the thousands and hundreds digits in the label column:   
+   case when  length( "label") >4  then regexp_replace( "Label", '^([0-9])', ',') else "label" end

@@ -1,0 +1,22 @@
+Generic Mapping Tools (GMT)
+-a set of unix command line tools for creating maps (and processing data?)
+-comes with it's own database of vector data
+-see:
+   http://gmt.soest.hawaii.edu/gmt/gmt_home.html
+   http://www.soest.hawaii.edu/gmt5/
+
+install:
+   http://www.soest.hawaii.edu/gmt5/
+-if on mac OSX use homebrew to install netCDF and GMT in that order
+   brew install netcdf
+   brew install gmt
+
+usage:
+-this tutorial guide is a good place to start:
+http://www.soest.hawaii.edu/gmt5/gmt/pdf/GMT_Tutorial.pdf
+
+-to make a small globe locator map and center it on the U.S. do:
+   pscoast -JA-98.35/39.5/2.5i -Bg10/g10 -Dc -A5000 -Ggrey90 -Sgrey73 \
+   -R3-98/262/-90/90 -P -N1 > globe_US.eps
+   
+-contains useful man pages, for example from bash type: pscoastq
